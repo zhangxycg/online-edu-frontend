@@ -16,7 +16,7 @@
 
       <el-form-item label="添加时间">
         <el-date-picker
-          v-model="searchObj.begin"
+          v-model="searchObj.beginTime"
           type="datetime"
           placeholder="选择开始时间"
           value-format="yyyy-MM-dd HH:mm:ss"
@@ -25,7 +25,7 @@
       </el-form-item>
       <el-form-item>
         <el-date-picker
-          v-model="searchObj.end"
+          v-model="searchObj.endTime"
           type="datetime"
           placeholder="选择截止时间"
           value-format="yyyy-MM-dd HH:mm:ss"
@@ -129,10 +129,48 @@ export default {
           console.log(response)
         })
     },
+    
     // 清空方法
     resetData() { 
       this.searchObj = {} // 清空数据
       this.getListTeacher()
+    },
+    
+    // 删除的方法
+    removeDataById(id) {
+      // 调用方法根据id进行删除
+      // teacher.deleteTeacherId(id)
+      //   .then()
+      //   .catch()
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(response => {
+        // 调用方法进行删除
+        // return表示后面的.then还会执行
+        return teacher.deleteTeacherId(id)
+      }).then(response => {
+        // 刷新页面，得到删除完成后的页面数据
+        this.getListTeacher()
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        })
+      }).catch(response => {
+        // 判断是取消还是删除失败
+        if (response === 'cancel') {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: '删除失败'
+          })
+        }       
+      })
     }
   }
 }

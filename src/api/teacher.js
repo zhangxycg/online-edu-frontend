@@ -12,5 +12,13 @@ export default {
       // 传递条件对象，如果传递json数据，使用data
       data: searchObj
     })
+  },
+  deleteTeacherId(id) {
+    return request({
+      // 后端controller的路径
+      url: '/eduservice/teacher/' + id,
+      // 提交方式
+      method: 'delete'
+    })
   }
 }
