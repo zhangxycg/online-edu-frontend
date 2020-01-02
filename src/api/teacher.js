@@ -31,5 +31,24 @@ export default {
       method: 'post',
       data: teacher
     })
+  },
+  // 根据id进行查询
+  getTeacherId(id) {
+    return request({
+      // 后端controller的路径
+      url: '/eduservice/teacher/getTeacherInfo/'+id,
+      // 提交方式
+      method: 'get',
+    })
+  },
+  // 修改讲师 
+  updateTeacherId(id,teacher) {
+    return request({
+      // 后端controller的路径
+      url: '/eduservice/teacher/updateTeacher/'+id,
+      // 提交方式
+      method: 'post',
+      data: teacher
+    })
   }
 }
