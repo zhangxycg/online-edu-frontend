@@ -13,12 +13,23 @@ export default {
       data: searchObj
     })
   },
+  // 删除
   deleteTeacherId(id) {
     return request({
       // 后端controller的路径
       url: '/eduservice/teacher/' + id,
       // 提交方式
       method: 'delete'
+    })
+  },
+  // 添加
+  saveTeacher(teacher) {
+    return request({
+      // 后端controller的路径
+      url: '/eduservice/teacher/addTeacher',
+      // 提交方式
+      method: 'post',
+      data: teacher
     })
   }
 }
