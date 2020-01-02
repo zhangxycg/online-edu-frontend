@@ -35,30 +35,46 @@
 
 <script>
 import teacher from '@/api/teacher'
+
+const defaultForm = {
+  name: '',
+  sort: 0,
+  level: '',
+  career: '',
+  intro: '',
+  avatar: ''
+}
+
 export default {
   data() {
     return { // 设置teacher对象的初始值
-      teacher: {
-        name:'',
-        sort:0,
-        level:'',
-        career:'',
-        intro:'',
-        avator:''
-      }
+      teacher: defaultForm
+    }
+  },
+  // 监听路由变化
+  watch: {
+    $route(to, from) {
+      console.log('watch $route')
+      this.init()
     }
   },
   created() {
-    // 在页面加载之前，判断路由里面是否有id值
-    // 如果有id值，调用方法根据id进行查询
-    // 从路由里获取值
-    if(this.$route.params && this.$route.params.id) {
-      const id = this.$route.params.id
-      // 调用方法根据id进行查询
-      this.getTeacherById(id)
-    }
+    this.init()
   },
   methods: {
+    init() {
+      // 在页面加载之前，判断路由里面是否有id值
+      // 如果有id值，调用方法根据id进行查询
+      // 从路由里获取值
+      if(this.$route.params && this.$route.params.id) { // 修改的时候进行数据回显
+        const id = this.$route.params.id
+        // 调用方法根据id进行查询
+        this.getTeacherById(id)
+      } else { // 添加
+        // 表单数据进行清空
+        this.teacher = { ...defaultForm }
+      }
+    },
     // 实现添加和修改都使用同一个表单
     saveOrUpdate() {
       // 判断在点击保存的时候，执行的是添加操作还是修改操作
@@ -111,9 +127,9 @@ export default {
           })
         }).then(() => {
           // 路由跳转到列表页面
-           this.$router.push({path: '/teacher'})
+          this.$router.push({path: '/teacher'})
         }).catch(() => {
-           this.$message({
+          this.$message({
             type: 'success',
             message: '修改失败！'
           })
