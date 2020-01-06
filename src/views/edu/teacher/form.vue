@@ -25,6 +25,32 @@
       </el-form-item>
 
       <!-- 讲师头像：TODO -->
+      <!-- 讲师头像 -->
+      <el-form-item label="讲师头像">
+
+        <!-- 头衔缩略图 -->
+        <pan-thumb :image="teacher.avatar"/>
+        <!-- 文件上传按钮 -->
+        <el-button type="primary" icon="el-icon-upload" @click="imagecropperShow=true">更换头像
+        </el-button>
+
+        <!--
+          v-show：是否显示上传组件
+          :key：类似于id，如果一个页面多个图片上传控件，可以做区分
+          :url：后台上传的url地址
+          @close：关闭上传组件
+          @crop-upload-success：上传成功后的回调 -->
+        <image-cropper
+                      v-show="imagecropperShow"
+                      :width="300"
+                      :height="300"
+                      :key="imagecropperKey"
+                      :url="BASE_API+'/eduservice/oss/upload'"
+                      field="file"
+                      @close="close"
+                      @crop-upload-success="cropSuccess"/>
+
+      </el-form-item>
 
       <el-form-item>
         <el-button :disabled="saveBtnDisabled" type="primary" @click="saveOrUpdate">保存</el-button>
@@ -35,6 +61,8 @@
 
 <script>
 import teacher from '@/api/teacher'
+import ImageCropper from '@/components/ImageCropper'
+import PanThumb from '@/components/PanThumb'
 
 const defaultForm = {
   name: '',
@@ -42,12 +70,20 @@ const defaultForm = {
   level: '',
   career: '',
   intro: '',
-  avatar: ''
+  avatar: 'http://online-edu-teacher.oss-cn-beijing.aliyuncs.com/2020/01/06/0f39db8c-ac06-4b2f-974d-19d9ddb73dc7file.png'
 }
 
 export default {
+  // 声明使用的额外组件
+  components:{ 
+    ImageCropper,
+    PanThumb
+  },
   data() {
     return { // 设置teacher对象的初始值
+      BASE_API: process.env.BASE_API, // 接口API地址
+      imagecropperShow: false,
+      imagecropperKey: 0,
       teacher: defaultForm
     }
   },
@@ -62,6 +98,24 @@ export default {
     this.init()
   },
   methods: {
+    // 上传成功后的回调函数
+    cropSuccess(data) {
+      console.log(data)
+      this.imagecropperShow = false
+      // 获取后台返回的图片地址，显示到页面中
+      this.teacher.avatar = data.imgurl
+      // 上传成功后，重新打开上传组件时初始化组件，否则显示上一次的上传结果
+      this.imagecropperKey = this.imagecropperKey + 1
+    },
+
+    // 关闭上传组件
+    close() {
+      // 点击×，关闭弹框
+      this.imagecropperShow = false
+      // 上传失败后，重新打开上传组件时初始化组件，否则显示上一次的上传结果
+      this.imagecropperKey = this.imagecropperKey + 1
+    },
+
     init() {
       // 在页面加载之前，判断路由里面是否有id值
       // 如果有id值，调用方法根据id进行查询
