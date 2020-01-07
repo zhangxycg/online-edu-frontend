@@ -37,6 +37,7 @@ export const constantRouterMap = [
     }]
   },
 
+  // 讲师管理
   {
     path: '/teacher',
     component: Layout,
@@ -62,6 +63,29 @@ export const constantRouterMap = [
         component: () => import('@/views/edu/teacher/form'),
         meta: { title: '修改讲师', icon: 'tree' },
         hidden: true
+      }
+    ]
+  },
+
+  // 课程分类管理
+  {
+    path: '/subject',
+    component: Layout,
+    redirect: '/subject/list',
+    name: '课程分类管理',
+    meta: { title: '课程分类管理', icon: 'example' },
+    children: [
+      {
+        path: 'list',
+        name: '课程分类列表',
+        component: () => import('@/views/edu/teacher/index'),
+        meta: { title: '课程分类列表', icon: 'table' }
+      },
+      {
+        path: 'import',
+        name: '导入课程分类',
+        component: () => import('@/views/edu/subject/import'),
+        meta: { title: '导入课程分类', icon: 'tree' }
       }
     ]
   },
