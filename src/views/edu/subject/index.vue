@@ -77,6 +77,42 @@ export default {
         this.getAllSubject()
     },
     methods: {
+        //删除分类的方法
+        remove(node, data) {
+            this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                //调用方法进行删除
+                //return 表示后面then还会执行
+                return subject.removeSubjectId(data.id)
+            }).then(() => {
+                //刷新整个页面
+                //this.getAllSubject()
+                //dom操作
+                //document.getElementById("ID").removeChild(node)
+                this.$refs.subjectTree.remove(node) // 删除节点
+                this.$message({
+                    type: 'success',
+                    message: '删除成功!'
+                })
+            }).catch(() => {
+                //判断点击取消，还是删除失败
+                if (response === 'cancel') {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    })
+                } else {
+                    this.$message({
+                        type: 'error',
+                        message: '删除失败'
+                    })
+                }        
+            })
+        
+        },
         getAllSubject() {
         subject.getAllSubjectList()
             .then(response => {
