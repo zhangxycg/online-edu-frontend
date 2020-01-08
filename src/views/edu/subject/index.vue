@@ -33,17 +33,18 @@
             </span>
         </el-tree>
 
-    <el-dialog :visible.sync="dialogFormVisible" title="添加分类">
-        <el-form :model="subject" label-width="120px">
-            <el-form-item label="分类标题">
-                <el-input v-model="subject.title"/>
-            </el-form-item>
-        </el-form>
-        <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="appendSubject()">确 定</el-button>
-        </div>
-    </el-dialog>
+        <!-- 弹框 -->
+        <el-dialog :visible.sync="dialogFormVisible" title="添加分类">
+            <el-form :model="subject" label-width="120px">
+                <el-form-item label="分类标题">
+                    <el-input v-model="subject.title"/>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="appendSubject()">确 定</el-button>
+            </div>
+        </el-dialog>
 
     </div>
 </template>
@@ -55,17 +56,17 @@ export default {
 
     data() {
         return {
-        filterText: '',
-        subjectList: [],
-        dialogFormVisible:false, //弹框默认false，不显示
-        subject: {  //分类对象初始值
-            title:'',
-            parentId: ''
-        },
-        defaultProps: {
-            children: 'children',
-            label: 'title'
-        }
+            filterText: '',
+            subjectList: [],
+            dialogFormVisible:false, //弹框默认false，不显示
+            subject: {  //分类对象初始值
+                title:'',
+                parentId: ''
+            },
+            defaultProps: {
+                children: 'children',
+                label: 'title'
+            }
         }
     },
     watch: {
@@ -77,6 +78,14 @@ export default {
         this.getAllSubject()
     },
     methods: {
+        // 添加分类
+        appendLevel() {
+
+        },
+        // 点击一级分类，弹出添加框
+        addOneLeveldialog() {
+            this.dialogFormVisible = true
+        },
         //删除分类的方法
         remove(node, data) {
             this.$confirm('此操作将永久删除该分类, 是否继续?', '提示', {
