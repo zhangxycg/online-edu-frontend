@@ -16,9 +16,7 @@
             <span slot-scope="{ node, data }" class="custom-tree-node">
                 <span>{{ node.label }}</span>
                 <span>
-                <!-- 使用Chrome的Vue插件调试 
-                @click="() => {dialogFormVisible=true;subject.parentId=data.id}">添加二级分类</el-button>
-                -->
+                <!-- 使用Chrome的Vue插件调试 -->
                 <el-button
                     v-if="node.level == 1"
                     type="text"
@@ -42,7 +40,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="appendLevel()">确 定</el-button>
+                <el-button type="primary" @click="appendSubject()">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -78,9 +76,21 @@ export default {
         this.getAllSubject()
     },
     methods: {
-        // 添加一级分类
-        appendLevel() {
-            subject.addSubjectOne(this.subject)
+        // 添加分类
+        appendSubject() {
+            // 需要判断添加的是一级分类还是二级分类
+            // 根据subject里面的parentId进行判断
+            if(!this.subject.parentId) {
+                //添加一级分类
+                this.appendOneLevel()
+            } else {
+                //添加二级分类
+                this.appendTwoLevel()
+            }
+        },
+        // 添加二级分类
+        appendTwoLevel() {
+            subject.addSubjectTwo(this.subject)
                 .then(response => {
                     this.$message({
                         type: 'success',
@@ -88,6 +98,9 @@ export default {
                     })
                     // 关闭弹框
                     this.dialogFormVisible = false
+                    // 清空表单内容
+                    this.subject.title = ''
+                    this.subject.parentId = ''
                     // 刷新整个列表的页面
                     this.getAllSubject()
                 })
@@ -97,6 +110,33 @@ export default {
                         message: '添加分类成功!'
                     })
                 })
+        },
+        // 添加一级分类
+        appendOneLevel() {
+            subject.addSubjectOne(this.subject)
+                .then(response => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加分类成功!'
+                    })
+                    // 关闭弹框
+                    this.dialogFormVisible = false
+                    // 清空表单内容
+                    this.subject.title = ''
+                    this.subject.parentId = ''
+                    // 刷新整个列表的页面
+                    this.getAllSubject()
+                })
+                .catch(response => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加分类成功!'
+                    })
+                })
+        },
+        addTwodialog(data) {
+            this.dialogFormVisible = true
+            this.subject.parentId = data.id
         },
         // 点击一级分类，弹出添加框
         addOneLeveldialog() {

@@ -22,5 +22,13 @@ export default {
             method: 'post',
             data: subject
         })
+    },
+    // 添加二级分类
+    addSubjectTwo(subject) {
+        return request({
+            url: '/eduservice/subject/addTwoLevel',
+            method: 'post',
+            data: subject
+        })
     }
 }
