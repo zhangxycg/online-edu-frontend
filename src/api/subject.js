@@ -15,5 +15,12 @@ export default {
             method: 'delete'
         })
     },
-    
+    // 添加一级分类
+    addSubjectOne(subject) {
+        return request({
+            url: '/eduservice/subject/addOneLevel',
+            method: 'post',
+            data: subject
+        })
+    }
 }

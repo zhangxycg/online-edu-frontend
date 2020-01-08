@@ -42,7 +42,7 @@
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="appendSubject()">确 定</el-button>
+                <el-button type="primary" @click="appendLevel()">确 定</el-button>
             </div>
         </el-dialog>
 
@@ -78,9 +78,25 @@ export default {
         this.getAllSubject()
     },
     methods: {
-        // 添加分类
+        // 添加一级分类
         appendLevel() {
-
+            subject.addSubjectOne(this.subject)
+                .then(response => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加分类成功!'
+                    })
+                    // 关闭弹框
+                    this.dialogFormVisible = false
+                    // 刷新整个列表的页面
+                    this.getAllSubject()
+                })
+                .catch(response => {
+                    this.$message({
+                        type: 'success',
+                        message: '添加分类成功!'
+                    })
+                })
         },
         // 点击一级分类，弹出添加框
         addOneLeveldialog() {
@@ -122,6 +138,7 @@ export default {
             })
         
         },
+        // 获取整个页面
         getAllSubject() {
         subject.getAllSubjectList()
             .then(response => {
