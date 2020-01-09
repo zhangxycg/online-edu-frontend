@@ -22,7 +22,9 @@
 <script>
 export default {
     data() {
-
+        return {
+            saveBtnDisabled: false
+        }
     },
     created() {
 
@@ -30,6 +32,9 @@ export default {
     methods: {
         previous() {
             this.$router.push({path: '/course/chapter/1'})
+        },
+        publish() {
+            
         }
     }
 }

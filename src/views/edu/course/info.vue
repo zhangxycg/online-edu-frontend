@@ -12,9 +12,32 @@
 
         <el-form label-width="120px">
 
-        <el-form-item>
-            <el-button :disabled="saveBtnDisabled" type="primary" @click="next">保存并下一步</el-button>
-        </el-form-item>
+            <el-form-item label="课程标题">
+                <el-input v-model="courseInfo.title" placeholder=" 示例：机器学习项目课：从基础到搭建项目视频课程。专业名称注意大小写"/>
+            </el-form-item>
+
+            <!-- 所属分类 TODO -->
+
+            <!-- 课程讲师 TODO -->
+
+            <el-form-item label="总课时">
+                <el-input-number :min="0" v-model="courseInfo.lessonNum" controls-position="right" placeholder="请填写课程的总课时数"/>
+            </el-form-item>
+
+            <!-- 课程简介 TODO -->
+            <el-form-item label="课程简介">
+                <el-input v-model="courseInfo.title" placeholder=" 示例：这是课程的简介"/>
+            </el-form-item>
+
+            <!-- 课程封面 TODO -->
+
+            <el-form-item label="课程价格">
+                <el-input-number :min="0" v-model="courseInfo.price" controls-position="right" placeholder="免费课程请设置为0元"/> 元
+            </el-form-item>
+
+            <el-form-item>
+                <el-button :disabled="saveBtnDisabled" type="primary" @click="next">保存并下一步</el-button>
+            </el-form-item>
         </el-form>
     </div>
 </template>
@@ -22,7 +45,8 @@
 export default {
     data() {
         return {
-            saveBtnDisabled: false // 保存按钮是否禁用
+            saveBtnDisabled: false, // 保存按钮是否禁用
+            courseInfo: {}
         }
     },
     created() {

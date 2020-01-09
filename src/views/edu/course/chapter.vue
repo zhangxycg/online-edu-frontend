@@ -23,7 +23,9 @@
 <script>
 export default {
     data() {
-        saveBtnDisabled: false // 保存按钮是否禁用
+        return {
+            saveBtnDisabled: false // 保存按钮是否禁用
+        }
     },
     created() {
         console.log('chapter created')
