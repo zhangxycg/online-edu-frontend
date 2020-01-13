@@ -42,11 +42,20 @@
     </div>
 </template>
 <script>
+import course from '@/api/course'
 export default {
     data() {
         return {
             saveBtnDisabled: false, // 保存按钮是否禁用
-            courseInfo: {}
+            courseInfo: {
+                title: '',
+                subjectId: '',
+                teacherId: '',
+                lessonNum: 0,
+                description: '',
+                cover: '',
+                price: 0
+            }
         }
     },
     created() {
@@ -54,8 +63,24 @@ export default {
     },
     methods: {
         next() {
-            // 路由跳转，跳转到编写大纲的页面
-            this.$router.push({path: '/course/chapter/1'})
+            // 调用方法
+            course.addCourseInfo(this.courseInfo)
+                .then(response => {
+                    console.log('***** '+response)
+                    this.$message({
+                        type: 'success',
+                        message: '添加课程信息成功!'
+                    })                  
+                    //路由跳转，到编写大纲页面
+                    this.$router.push({path:'/course/chapter/'+response.data.courseId})
+                })
+                .catch(response => {
+                    console.log('###### '+response)
+                    this.$message({
+                        type: 'success',
+                        message: '添加课程信息失败!'
+                    })
+                })
         }
     }
 }
