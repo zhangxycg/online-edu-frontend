@@ -8,5 +8,12 @@ export default {
             method: 'post',
             data: courseInfo
         })
+    },
+    // 查询所有的讲师显示到下拉列表
+    getAllTeacherList() {
+        return request({
+            url: '/eduservice/teacher',
+            method: 'get',
+        })
     }
 }
