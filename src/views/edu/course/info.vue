@@ -16,7 +16,19 @@
                 <el-input v-model="courseInfo.title" placeholder=" 示例：机器学习项目课：从基础到搭建项目视频课程。专业名称注意大小写"/>
             </el-form-item>
 
-            <!-- 所属分类 TODO -->
+            <!-- 所属分类：级联下拉列表 -->
+            <!-- 一级分类 -->
+            <el-form-item label="课程类别">
+            <el-select
+                v-model="courseInfo.subjectParentId"
+                placeholder="请选择">
+                <el-option
+                v-for="subject in oneLevelSubjectList"
+                :key="subject.id"
+                :label="subject.title"
+                :value="subject.id"/>
+            </el-select>
+            </el-form-item>
 
             <!-- 课程讲师 -->
             <el-form-item label="课程讲师">
@@ -54,6 +66,7 @@
 </template>
 <script>
 import course from '@/api/course'
+import subject from '@/api/subject'
 
 const defaultForm = {
         title: '',
@@ -70,14 +83,18 @@ export default {
         return {
             saveBtnDisabled: false, // 保存按钮是否禁用
             teacherList: [], // 存储所有的讲师的信息 集合
+            oneLevelSubjectList: [], // 一级分类集合
+            twoLevelSubjectList: [], // 二级分类集合
             courseInfo: defaultForm
         }
     },
     created() {
         console.log('info created')
+        this.init()
         // 调用获取所有讲师的方法
         this.getTeacherList()
-        this.init()
+        // 调用获取一级分类信息的方法
+        this.getLevelAll()
     },
     methods: {
         // 判断路由是否有id值
@@ -89,6 +106,13 @@ export default {
                 // 没有id值，清空数据
                 this.courseInfo = { ... defaultForm }
             }
+        },
+        // 获取所有分类的信息
+        getLevelAll() {
+            subject.getAllSubjectList()
+                .then(response => {
+                    this.oneLevelSubjectList = response.data.OneSubjectDto
+                })
         },
 
         // 获取所有讲师的方法
