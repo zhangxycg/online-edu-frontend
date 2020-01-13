@@ -54,28 +54,43 @@
 </template>
 <script>
 import course from '@/api/course'
+
+const defaultForm = {
+        title: '',
+        subjectId: '',
+        teacherId: '',
+        lessonNum: 0,
+        description: '',
+        cover: '',
+        price: 0
+}
+
 export default {
     data() {
         return {
             saveBtnDisabled: false, // 保存按钮是否禁用
             teacherList: [], // 存储所有的讲师的信息 集合
-            courseInfo: {
-                title: '',
-                subjectId: '',
-                teacherId: '',
-                lessonNum: 0,
-                description: '',
-                cover: '',
-                price: 0
-            }
+            courseInfo: defaultForm
         }
     },
     created() {
         console.log('info created')
         // 调用获取所有讲师的方法
         this.getTeacherList()
+        this.init()
     },
     methods: {
+        // 判断路由是否有id值
+        init() {
+            if (this.$router.params && this.$router.params.id) {
+                // 根据id进行查询，做数据回显
+                const id = this.$router.params.id 
+            } else {
+                // 没有id值，清空数据
+                this.courseInfo = { ... defaultForm }
+            }
+        },
+
         // 获取所有讲师的方法
         getTeacherList() {
             course.getAllTeacherList()
@@ -85,6 +100,19 @@ export default {
         },
         // 保存课程
         next() {
+            // 判断是添加还是修改，判断课程对象里面是否有id值
+            if (!this.courseInfo.id) {
+                // 添加
+                this.addCourse()
+            } else {
+                // 修改
+                this.updateCourse()
+            }
+            
+        },
+        // 添加课程
+        addCourse() {
+            alert(2)
             // 调用方法
             course.addCourseInfo(this.courseInfo)
                 .then(response => {
@@ -103,6 +131,10 @@ export default {
                         message: '添加课程信息失败!'
                     })
                 })
+        },
+        // 修改课程
+        updateCourse() {
+
         }
     }
 }
