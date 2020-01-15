@@ -21,26 +21,34 @@
             <el-form-item label="课程类别">
             <el-select
                 v-model="courseInfo.subjectParentId"
-                placeholder="请选择">
+                placeholder="请选择" @change="subjectLevelOneChanged">
                 <el-option
                 v-for="subject in oneLevelSubjectList"
                 :key="subject.id"
                 :label="subject.title"
                 :value="subject.id"/>
             </el-select>
+            <!-- 二级分类 -->
+                <el-select v-model="courseInfo.subjectId" placeholder="请选择">
+                <el-option
+                    v-for="subject in twoLevelSubjectList"
+                    :key="subject.value"
+                    :label="subject.title"
+                    :value="subject.id"/>
+                </el-select>
             </el-form-item>
 
             <!-- 课程讲师 -->
             <el-form-item label="课程讲师">
-            <el-select
-                v-model="courseInfo.teacherId"
-                placeholder="请选择">
-                <el-option
-                v-for="teacher in teacherList"
-                :key="teacher.id"
-                :label="teacher.name"
-                :value="teacher.id"/>
-            </el-select>
+                <el-select
+                    v-model="courseInfo.teacherId"
+                    placeholder="请选择">
+                    <el-option
+                    v-for="teacher in teacherList"
+                    :key="teacher.id"
+                    :label="teacher.name"
+                    :value="teacher.id"/>
+                </el-select>
             </el-form-item>
 
             <el-form-item label="总课时">
@@ -107,6 +115,27 @@ export default {
                 this.courseInfo = { ... defaultForm }
             }
         },
+        // 触发change事件，显示一级分类里面所有的二级分类
+        subjectLevelOneChanged(value) {
+            // 获取选择一级分类的Id值
+            // 根据一级分类Id值，获取下面所有二级分类
+
+            // 1. 遍历所有一级分类集合
+            // 2. 获取每个一级分类
+            // 3. 判断value值和遍历出来的每一个一级分类id值是否一样
+            // 如果一样，获取下面二级分类，是children
+            for(var i = 0; i < this.oneLevelSubjectList.length; i++) {
+                // 获取每一个一级分类
+                var levelOne = this.oneLevelSubjectList[i]
+                // 判断value值和遍历出来的每一个一级分类id值是否一样
+                if (levelOne.id === value) {
+                    // 获取下面的二级分类，是children
+                    this.twoLevelSubjectList = levelOne.children
+                    this.courseInfo.subjectId = ''
+                }
+
+            }
+        },
         // 获取所有分类的信息
         getLevelAll() {
             subject.getAllSubjectList()
@@ -136,7 +165,6 @@ export default {
         },
         // 添加课程
         addCourse() {
-            alert(2)
             // 调用方法
             course.addCourseInfo(this.courseInfo)
                 .then(response => {
