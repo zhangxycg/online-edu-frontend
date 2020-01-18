@@ -61,6 +61,16 @@
             </el-form-item>
 
             <!-- 课程封面 TODO -->
+            <el-form-item label="课程封面">
+                <el-upload
+                    :show-file-list="false"
+                    :on-success="handleAvatarSuccess"
+                    :before-upload="beforeAvatarUpload"
+                    :action="BASE_API+'/eduservice/oss/upload'"
+                    class="avatar-uploader">
+                    <img :src="courseInfo.cover">
+                </el-upload>
+            </el-form-item>
 
             <el-form-item label="课程价格">
                 <el-input-number :min="0" v-model="courseInfo.price" controls-position="right" placeholder="免费课程请设置为0元"/> 元
@@ -83,7 +93,7 @@ const defaultForm = {
         teacherId: '',
         lessonNum: 0,
         description: '',
-        cover: '',
+        cover: '/static/01.jpg',
         price: 0
 }
 
@@ -95,7 +105,8 @@ export default {
             teacherList: [], // 存储所有的讲师的信息 集合
             oneLevelSubjectList: [], // 一级分类集合
             twoLevelSubjectList: [], // 二级分类集合
-            courseInfo: defaultForm
+            courseInfo: defaultForm,
+            BASE_API: process.env.BASE_API // 接口API地址
         }
     },
     created() {
@@ -116,6 +127,26 @@ export default {
                 // 没有id值，清空数据
                 this.courseInfo = { ... defaultForm }
             }
+        },
+        // 上传封面之前调用的方法
+        beforeAvatarUpload(file) {
+            // 设置允许上传图片的格式、上传图片的大小
+            const isJPG = file.type === 'image/jpeg'
+            const isLt2M = file.size / 1024 / 1024 < 2
+
+            if (!isJPG) {
+                this.$message.error('上传头像图片只能是 JPG 格式!')
+            }
+            if (!isLt2M) {
+                this.$message.error('上传头像图片大小不能超过 2MB!')
+            }
+            return isJPG && isLt2M
+
+        },
+        // 上传封面成功之后调用的方法
+        handleAvatarSuccess(res,file) {
+            // 上传成功之后，获取上传图片的OSS路径，赋值给课程封面字段
+            this.courseInfo.cover = res.data.imgurl
         },
         // 触发change事件，显示一级分类里面所有的二级分类
         subjectLevelOneChanged(value) {
